@@ -7,6 +7,30 @@ RSpec.describe "API::V1::Tasks", type: :request do
 
       produces "application/json"
 
+      parameter name: :status,
+                in: :query,
+                type: :string,
+                required: false,
+                description: "Filter by status"
+
+      parameter name: :from,
+                in: :query,
+                type: :string,
+                required: false,
+                description: "Start due date"
+
+      parameter name: :to,
+                in: :query,
+                type: :string,
+                required: false,
+                description: "End due date"
+
+      parameter name: :page,
+                in: :query,
+                type: :integer,
+                required: false,
+                description: "Pagination page"
+
       response "200", "successful" do
         before do
           Task.create!(

@@ -2,18 +2,23 @@ module Api
   module V1
     class TasksController < BaseController
       def index
-        tasks = Task.order(created_at: :desc)
+        tasks = Tasks::FilterQuery.call(
+          Task.order(created_at: :desc),
+          params
+        )
 
-        tasks = tasks.where(status: params[:status]) if params[:status].present?
-
-        if params[:from].present? && params[:to].present?
-          tasks = tasks.where(
-            due_date: params[:from]..params[:to]
-          )
-        end
+        @pagy, tasks = pagy(tasks)
 
         render_success(
-          TaskBlueprint.render_as_hash(tasks)
+          {
+            data: TaskBlueprint.render_as_hash(tasks),
+            meta: {
+              page: @pagy.page,
+              items: @pagy.limit,
+              pages: @pagy.pages,
+              count: @pagy.count
+            }
+          }
         )
       end
 
@@ -34,7 +39,10 @@ module Api
             status: :created
           )
         else
-          render_error(task.errors.full_messages)
+          render_error(
+            task.errors.full_messages,
+            status: :unprocessable_entity
+          )
         end
       end
 
@@ -46,7 +54,10 @@ module Api
             TaskBlueprint.render_as_hash(task)
           )
         else
-          render_error(task.errors.full_messages)
+          render_error(
+            task.errors.full_messages,
+            status: :unprocessable_entity
+          )
         end
       end
 
