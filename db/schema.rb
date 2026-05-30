@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_26_190957) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_30_112933) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,6 +20,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_26_190957) do
     t.boolean "system", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
+  create_table "task_occurrences", force: :cascade do |t|
+    t.boolean "cancelled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.text "description_override"
+    t.boolean "detached", default: false, null: false
+    t.date "occurrence_date", null: false
+    t.datetime "overridden_due_date"
+    t.integer "status", default: 0, null: false
+    t.bigint "task_id", null: false
+    t.string "title_override"
+    t.datetime "updated_at", null: false
+    t.index ["task_id", "occurrence_date"], name: "index_task_occurrences_on_task_id_and_occurrence_date", unique: true
+    t.index ["task_id"], name: "index_task_occurrences_on_task_id"
   end
 
   create_table "task_tags", force: :cascade do |t|
@@ -36,6 +51,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_26_190957) do
     t.datetime "created_at", null: false
     t.text "description"
     t.date "due_date", null: false
+    t.date "ends_at"
+    t.integer "interval_value"
+    t.integer "monthly_day"
+    t.integer "recurrence_type", default: 0
+    t.date "specific_dates", default: [], array: true
     t.integer "status", default: 0, null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
@@ -43,6 +63,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_26_190957) do
     t.index ["status"], name: "index_tasks_on_status"
   end
 
+  add_foreign_key "task_occurrences", "tasks"
   add_foreign_key "task_tags", "tags"
   add_foreign_key "task_tags", "tasks"
 end
