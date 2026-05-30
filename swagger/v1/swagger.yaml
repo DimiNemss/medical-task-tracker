@@ -1,0 +1,87 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/tasks":
+    get:
+      summary: List tasks
+      tags:
+      - Tasks
+      parameters:
+      - name: status
+        in: query
+        required: false
+        description: Filter by status
+        schema:
+          type: string
+      - name: from
+        in: query
+        required: false
+        description: Start due date
+        schema:
+          type: string
+      - name: to
+        in: query
+        required: false
+        description: End due date
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        description: Pagination page
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+    post:
+      summary: Create task
+      tags:
+      - Tasks
+      parameters: []
+      responses:
+        '201':
+          description: task created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    status:
+                      type: string
+                    due_date:
+                      type: string
+                      format: date
+                  required:
+                  - title
+                  - due_date
+  "/api/v1/tasks/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show task
+      tags:
+      - Tasks
+      responses:
+        '200':
+          description: successful
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000
