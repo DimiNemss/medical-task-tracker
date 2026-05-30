@@ -6,6 +6,9 @@ module Api
       rescue_from ActiveRecord::RecordNotFound,
                    with: :render_not_found
 
+      rescue_from Pagy::OverflowError,
+             with: :render_page_not_found
+
       private
 
       def render_success(data = {}, status: :ok)
@@ -19,6 +22,13 @@ module Api
       def render_not_found(error)
         render_error(error.message, status: :not_found)
       end
+      
+      def render_page_not_found(_error)
+        render_error(
+          "Page not found",
+          status: :not_found
+        )
+      end      
     end
   end
 end

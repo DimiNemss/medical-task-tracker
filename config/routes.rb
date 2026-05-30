@@ -6,8 +6,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "health", to: "health#index"
 
-      resources :tags, only: [:index]
-
+      resources :tags, only: %i[
+        index
+        create
+        update
+        destroy
+      ]
       resources :tasks do
         resources :tags,
                   only: [:create],
@@ -16,6 +20,10 @@ Rails.application.routes.draw do
                 action: :destroy,
                 on: :collection
         end
+
+      patch "occurrences/:occurrence_date",
+            to: "task_occurrences#update",
+            as: :occurrence
       end
     end
   end

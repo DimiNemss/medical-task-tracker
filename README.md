@@ -1,24 +1,71 @@
-# README
+# Medical Task Tracker
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+REST API для управления медицинскими задачами с поддержкой периодичности, тегов и индивидуальных изменений отдельных экземпляров задач.
 
-Things you may want to cover:
+Для работы проекта необходимы:
 
-* Ruby version
+* Ruby 3.4.3
+* PostgreSQL
+* Bundler
 
-* System dependencies
+Клонирование репозитория:
 
-* Configuration
+```bash
+git clone <repository_url>
+cd medical-task-tracker
+```
 
-* Database creation
+Установка зависимостей:
 
-* Database initialization
+```bash
+bundle install
+```
 
-* How to run the test suite
+Создание базы данных:
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+rails db:create
+```
 
-* Deployment instructions
+Применение миграций:
 
-* ...
+```bash
+rails db:migrate
+```
+
+Заполнение начальными данными:
+
+```bash
+rails db:seed
+```
+
+Запуск приложения:
+
+```bash
+rails server
+```
+
+После запуска приложение будет доступно по адресу:
+
+```text
+http://localhost:3000
+```
+
+В системе автоматически создаются системные теги:
+
+* отчетность
+* операции
+* звонок
+
+Системные теги нельзя изменять и удалять.
+
+Поддерживаются следующие типы задач:
+
+* разовая задача;
+* ежедневная задача (каждый n-й день);
+* ежемесячная задача (на определённое число месяца);
+* задача на конкретные даты;
+* задача на чётные дни месяца;
+* задача на нечётные дни месяца.
+
+Для периодических задач реализован механизм исключений. Отдельный экземпляр задачи можно выполнить, отменить, перенести на другую дату или изменить независимо от основного правила периодичности. Для хранения таких изменений используется сущность `TaskOccurrence`.
