@@ -14,7 +14,7 @@ gem "tzinfo-data", platforms: %i[windows jruby]
 gem "blueprinter"
 
 # Pagination
-gem "pagy", "~> 9.3"
+gem "pagy", "~> 43.6"
 gem "ostruct"
 
 # API docs
